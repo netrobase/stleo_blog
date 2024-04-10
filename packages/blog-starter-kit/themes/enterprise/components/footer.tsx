@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Container } from './container';
 import { useAppContext } from './contexts/appContext';
 import { SocialLinks } from './social-links';
+import Image from 'next/image';
 
 export const Footer = () => {
 	const { publication } = useAppContext();
@@ -16,7 +17,7 @@ export const Footer = () => {
 							aria-label={`${publication.title} home page`}
 							className="flex flex-row items-center gap-5"
 						>
-							<img className="block w-40" src={PUBLICATION_LOGO} alt={publication.title} />
+							<Image className="block w-40" src={PUBLICATION_LOGO} alt={publication.title} />
 						</Link>
 					</div>
 				) : (
@@ -32,106 +33,81 @@ export const Footer = () => {
 							</p>
 							<ul className="flex flex-col gap-1 text-slate-700 dark:text-neutral-300">
 								<li>
-									<a href="#" className="hover:underline">
-										Contact us
+									<Link href="/contact" className="hover:underline">
+										Contact Us
+									</Link>
+								</li>
+								<li>
+									<a href="mailto:stleothegreatenugu@gmail.com?subject=I have a question about ..." className="hover:underline hover:text-primary-700">
+										Email Us
 									</a>
 								</li>
 								<li>
-									<a href="#" className="hover:underline">
-										Book a demo
+									<a href="tel:+2348064710438" className="hover:underline hover:text-primary-700">
+										Call Us
 									</a>
 								</li>
 								<li>
-									<a href="#" className="hover:underline">
-										Newsletter
-									</a>
-								</li>
-								<li>
-									<a href="#" className="hover:underline">
-										Slack
-									</a>
-								</li>
-							</ul>
-						</div>
-						<div className="col-span-full md:col-span-2 lg:col-span-1">
-							<p className="mb-2 font-semibold text-slate-600 dark:text-neutral-200">Resources</p>
-							<ul className="flex flex-col gap-1 text-slate-700 dark:text-neutral-300">
-								<li>
-									<a href="#" className="hover:underline">
-										Community
-									</a>
-								</li>
-								<li>
-									<a href="#" className="hover:underline">
-										Use Cases
-									</a>
-								</li>
-								<li>
-									<a href="#" className="hover:underline">
-										Source Code
-									</a>
-								</li>
-								<li>
-									<a href="#" className="hover:underline">
-										Blog
-									</a>
+									<Link href="/#faq" className="hover:underline">
+										FAQ
+									</Link>
 								</li>
 							</ul>
 						</div>
 						<div className="col-span-full md:col-span-2 lg:col-span-1">
-							<p className="mb-2 font-semibold text-slate-600 dark:text-neutral-200">Product</p>
+							<p className="mb-2 font-semibold text-slate-600 dark:text-neutral-200">Events & Updates</p>
 							<ul className="flex flex-col gap-1 text-slate-700 dark:text-neutral-300">
 								<li>
-									<a href="#" className="hover:underline">
-										Pricing
-									</a>
+									<Link href="/series/school-events" className="hover:underline">
+										School Events
+									</Link>
 								</li>
 								<li>
-									<a href="#" className="hover:underline">
-										Documentation
-									</a>
+									<Link href="/series/school-updates" className="hover:underline">
+										School Updates
+									</Link>
 								</li>
 								<li>
-									<a href="#" className="hover:underline">
-										Integrations
-									</a>
+									<Link href="/series/parish-events" className="hover:underline">
+										Parish Events
+									</Link>
 								</li>
 								<li>
-									<a href="#" className="hover:underline">
-										Support
-									</a>
+									<Link href="/series/parish-updates" className="hover:underline">
+										Parish Updates
+									</Link>
 								</li>
 							</ul>
 						</div>
 						<div className="col-span-1">
-							<p className="mb-2 font-semibold text-slate-600 dark:text-neutral-200">Other links</p>
+							<p className="mb-2 font-semibold text-slate-600 dark:text-neutral-200">Links</p>
 							<ul className="flex flex-col gap-1 text-slate-700 dark:text-neutral-300">
 								<li>
-									<a href="#" className="hover:underline">
-										Events
-									</a>
+									<Link href="/about" className="hover:underline">
+										About Us
+									</Link>
 								</li>
 								<li>
-									<a href="#" className="hover:underline">
-										Careers
-									</a>
+									<Link href="/blog" className="hover:underline">
+										Blog Posts
+									</Link>
 								</li>
 								<li>
-									<a href="#" className="hover:underline">
-										Newsroom
-									</a>
+									<Link href="/slggs" className="hover:underline">
+										Group of Schools
+									</Link>
 								</li>
 								<li>
-									<a href="#" className="hover:underline">
-										About us
-									</a>
+									<Link href="https://portal.saintleothegreat.com/" target='_blank' className="hover:underline">
+										Result Portal
+									</Link>
 								</li>
 							</ul>
 						</div>
 					</div>
-					<div className="col-span-2 flex flex-col items-end gap-5 text-right text-slate-600 dark:text-neutral-300 md:text-left">
+					<div className="col-span-2 flex flex-col items-end gap-1 text-right text-slate-600 dark:text-neutral-300 md:text-left">
 						<SocialLinks />
-						<p>&copy; 2023 Company Inc.</p>
+						<p>&copy; {new Date().getFullYear()} Pietan Caring Mission</p>
 						<p>
 							<a href="#" className="hover:underline">
 								Privacy Policy
@@ -139,6 +115,11 @@ export const Footer = () => {
 							·{' '}
 							<a href="#" className="hover:underline">
 								Terms
+							</a>
+						</p>
+						<p>
+							<a href="https://netrobase.com" target='_blank' rel="noopener noreferrer">
+								Powered By <span className='text-primary-700'>Netrobase</span>.
 							</a>
 						</p>
 					</div>

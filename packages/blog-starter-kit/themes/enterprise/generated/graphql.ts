@@ -3120,6 +3120,7 @@ export enum Scope {
   DocsEditorOrOwner = 'docs_editor_or_owner',
   DocsOwner = 'docs_owner',
   ImportSubscribersToPublication = 'import_subscribers_to_publication',
+  InvitedTeamUser = 'invited_team_user',
   PublicationAdmin = 'publication_admin',
   PublicationMember = 'publication_member',
   PublishComment = 'publish_comment',

@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import { useAppContext } from './contexts/appContext';
@@ -10,15 +10,15 @@ const BASE_PATH = process.env.NEXT_PUBLIC_BASE_URL || '';
 export const Analytics = () => {
 	const { publication, post, series, page } = useAppContext();
 
-	const _sendPageViewsToHashnodeGoogleAnalytics = () => {
+	const _sendPageViewsToHashnodeGoogleAnalytics = useCallback(() => {
 		// @ts-ignore
 		window.gtag('config', GA_TRACKING_ID, {
 			transport_url: 'https://ping.hashnode.com',
 			first_party_collection: true,
 		});
-	};
+	}, []);
 
-	const _sendViewsToHashnodeInternalAnalytics = async () => {
+	const _sendViewsToHashnodeInternalAnalytics = useCallback(async () => {
 		// Send to Hashnode's own internal analytics
 		const event: Record<string, string | number | object> = {
 			event_type: 'pageview',
@@ -50,9 +50,9 @@ export const Analytics = () => {
 			},
 			body: JSON.stringify({ events: [event] }),
 		});
-	};
+	}, [publication.id]);
 
-	const _sendViewsToHashnodeAnalyticsDashboard = async () => {
+	const _sendViewsToHashnodeAnalyticsDashboard = useCallback(async () => {
 		const LOCATION = window.location;
 		const NAVIGATOR = window.navigator;
 		const currentFullURL =
@@ -105,9 +105,9 @@ export const Analytics = () => {
 			},
 			body: JSON.stringify({ data }),
 		});
-	};
+	}, [publication.id, post]);
 
-	function _sendViewsToAdvancedAnalyticsDashboard() {
+	const _sendViewsToAdvancedAnalyticsDashboard = useCallback(() => {
 		const publicationId = publication.id;
 		const postId = post && post.id;
 		const seriesId = series?.id || post?.series?.id;
@@ -182,7 +182,7 @@ export const Analytics = () => {
 				keepalive: true,
 			});
 		}
-	}
+	}, [publication.id, post, series, page]);
 
 	useEffect(() => {
 		if (!isProd) return;
@@ -191,7 +191,7 @@ export const Analytics = () => {
 		_sendViewsToHashnodeInternalAnalytics();
 		_sendViewsToHashnodeAnalyticsDashboard();
 		_sendViewsToAdvancedAnalyticsDashboard();
-	}, []);
+	}, [_sendPageViewsToHashnodeGoogleAnalytics, _sendViewsToAdvancedAnalyticsDashboard, _sendViewsToHashnodeAnalyticsDashboard, _sendViewsToHashnodeInternalAnalytics]);
 
 	return null;
 };

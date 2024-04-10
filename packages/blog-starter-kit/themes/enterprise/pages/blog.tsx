@@ -5,6 +5,8 @@ import { GetStaticProps } from 'next';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import { useState } from 'react';
+import { Waypoint } from 'react-waypoint';
+import { Button } from '../components/button';
 import { Container } from '../components/container';
 import { AppProvider } from '../components/contexts/appContext';
 import { Footer } from '../components/footer';
@@ -12,6 +14,8 @@ import { Header } from '../components/header';
 import { HeroPost } from '../components/hero-post';
 import { ArticleSVG, ChevronDownSVG } from '../components/icons';
 import { Layout } from '../components/layout';
+import { MorePosts } from '../components/more-posts';
+import { Navbar } from '../components/navbar';
 import { SecondaryPost } from '../components/secondary-post';
 import {
 	MorePostsByPublicationDocument,
@@ -25,8 +29,6 @@ import {
 	PublicationFragment,
 } from '../generated/graphql';
 import { DEFAULT_COVER } from '../utils/const';
-import { HeroSection, ProgramsSection, GroupOfSchoolsSection, ParishActivity, FAQ, ContactUsSection } from '../components/home-page-sections';
-
 
 const SubscribeForm = dynamic(() =>
 	import('../components/subscribe-form').then((mod) => mod.SubscribeForm),
@@ -43,6 +45,7 @@ type Props = {
 export default function Index({ publication, initialAllPosts, initialPageInfo }: Props) {
 	const [allPosts, setAllPosts] = useState<PostFragment[]>(initialAllPosts);
 	const [pageInfo, setPageInfo] = useState<Props['initialPageInfo']>(initialPageInfo);
+	const [loadedMore, setLoadedMore] = useState(false);
 
 	const loadMore = async () => {
 		const data = await request<MorePostsByPublicationQuery, MorePostsByPublicationQueryVariables>(
@@ -60,6 +63,7 @@ export default function Index({ publication, initialAllPosts, initialPageInfo }:
 		const newPosts = data.publication.posts.edges.map((edge) => edge.node);
 		setAllPosts([...allPosts, ...newPosts]);
 		setPageInfo(data.publication.posts.pageInfo);
+		setLoadedMore(true);
 	};
 
 	const firstPost = allPosts[0];
@@ -75,6 +79,7 @@ export default function Index({ publication, initialAllPosts, initialPageInfo }:
 			/>
 		);
 	});
+	const morePosts = allPosts.slice(4);
 
 	return (
 		<AppProvider publication={publication}>
@@ -117,47 +122,34 @@ export default function Index({ publication, initialAllPosts, initialPageInfo }:
 				</Head>
 				<Header />
 				<Container className="flex flex-col items-stretch gap-10 px-5 pb-10">
-					{/* Hero Section */}
-					<HeroSection />
+					<Navbar />
 
-					{/* Programs Section */}
-					<ProgramsSection />
-
-					{/* Group of Schools Section */}
-					<GroupOfSchoolsSection />
-
-					{/* News and Updates Section */}
-					<div className='bg-gray-200 py-10 px-5 rounded-lg'>
-						<p className="text-2xl font-semibold text-primary-600 dark:text-primary-500 text-center mt-0 mb-3">
-							Latest News and Updates
-						</p>
-						{allPosts.length === 0 && (
-							<div className="grid grid-cols-1 py-20 lg:grid-cols-3">
-								<div className="col-span-1 flex flex-col items-center gap-5 text-center text-slate-700 dark:text-neutral-400 lg:col-start-2">
-									<div className="w-20">
-										<ArticleSVG clasName="stroke-current" />
-									</div>
-									<p className="text-xl font-semibold ">
-										Hang tight! We&apos;re drafting the first article.
-									</p>
+					{allPosts.length === 0 && (
+						<div className="grid grid-cols-1 py-20 lg:grid-cols-3">
+							<div className="col-span-1 flex flex-col items-center gap-5 text-center text-slate-700 dark:text-neutral-400 lg:col-start-2">
+								<div className="w-20">
+									<ArticleSVG clasName="stroke-current" />
 								</div>
+								<p className="text-xl font-semibold ">
+									Hang tight! We&apos;re drafting the first article.
+								</p>
 							</div>
-						)}
-
-						<div className="grid items-start gap-6 xl:grid-cols-2">
-							<div className="col-span-1">
-								{firstPost && (
-									<HeroPost
-										title={firstPost.title}
-										coverImage={firstPost.coverImage?.url || DEFAULT_COVER}
-										date={firstPost.publishedAt}
-										slug={firstPost.slug}
-										excerpt={firstPost.brief}
-									/>
-								)}
-							</div>
-							<div className="col-span-1 flex flex-col gap-6">{secondaryPosts}</div>
 						</div>
+					)}
+
+					<div className="grid items-start gap-6 xl:grid-cols-2">
+						<div className="col-span-1">
+							{firstPost && (
+								<HeroPost
+									title={firstPost.title}
+									coverImage={firstPost.coverImage?.url || DEFAULT_COVER}
+									date={firstPost.publishedAt}
+									slug={firstPost.slug}
+									excerpt={firstPost.brief}
+								/>
+							)}
+						</div>
+						<div className="col-span-1 flex flex-col gap-6">{secondaryPosts}</div>
 					</div>
 
 					{allPosts.length > 0 && (
@@ -171,15 +163,24 @@ export default function Index({ publication, initialAllPosts, initialPageInfo }:
 						</div>
 					)}
 
-					{/* Parish Activity Section */}
-					<ParishActivity />
-
-					{/* FAQ Section */}
-					<FAQ />
-
-					{ /* Contact Us Section */}
-					<ContactUsSection />
-
+					{morePosts.length > 0 && (
+						<>
+							<MorePosts context="home" posts={morePosts} />
+							{!loadedMore && pageInfo.hasNextPage && pageInfo.endCursor && (
+								<div className="flex w-full flex-row items-center justify-center">
+									<Button
+										onClick={loadMore}
+										type="outline"
+										icon={<ChevronDownSVG className="h-5 w-5 stroke-current" />}
+										label="Load more posts"
+									/>
+								</div>
+							)}
+							{loadedMore && pageInfo.hasNextPage && pageInfo.endCursor && (
+								<Waypoint onEnter={loadMore} bottomOffset={'10%'} />
+							)}
+						</>
+					)}
 				</Container>
 				<Footer />
 			</Layout>

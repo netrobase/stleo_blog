@@ -7,6 +7,7 @@ import { useAppContext } from './contexts/appContext';
 import HamburgerSVG from './icons/svgs/HamburgerSVG';
 import { PublicationLogo } from './publication-logo';
 import PublicationSidebar from './sidebar';
+import Link from 'next/link';
 
 function hasUrl(
 	navbarItem: PublicationNavbarItem,
@@ -28,11 +29,20 @@ export const Header = () => {
 
 	const navList = (
 		<ul className="flex flex-row items-center gap-2 text-white">
+			<li>
+				<Link
+					href="/blog"
+					rel="noopener noreferrer"
+					className="transition-200 block max-w-[200px] truncate text-ellipsis whitespace-nowrap rounded-full p-2 transition-colors hover:bg-white hover:text-black dark:hover:bg-neutral-800 dark:hover:text-white"
+				>
+					Blog
+				</Link>
+			</li>
 			{visibleItems.map((item) => (
 				<li key={item.url}>
 					<a
 						href={item.url}
-						target="_blank"
+						// target="_blank"
 						rel="noopener noreferrer"
 						className="transition-200 block max-w-[200px] truncate text-ellipsis whitespace-nowrap rounded-full p-2 transition-colors hover:bg-white hover:text-black dark:hover:bg-neutral-800 dark:hover:text-white"
 					>
@@ -60,7 +70,7 @@ export const Header = () => {
 									<DropdownMenu.Item asChild key={item.url}>
 										<a
 											href={item.url}
-											target="_blank"
+											// target="_blank"
 											rel="noopener noreferrer"
 											className="transition-200 block truncate p-2 transition-colors hover:bg-slate-100 hover:text-black dark:hover:bg-neutral-800 dark:hover:text-white"
 										>
@@ -99,7 +109,7 @@ export const Header = () => {
 				</div>
 				<div className="col-span-2 flex flex-row items-center justify-end gap-5 text-slate-300 lg:col-span-3">
 					<nav className="hidden lg:block">{navList}</nav>
-					<Button href={baseUrl} as="a" type="primary" label="Book a demo" />
+					<Button href="https://portal.saintleothegreat.com/" target="_blank" as="a" type="primary" label="Result Portal" />
 				</div>
 			</Container>
 			<div className="mt-5 flex justify-center lg:hidden">
